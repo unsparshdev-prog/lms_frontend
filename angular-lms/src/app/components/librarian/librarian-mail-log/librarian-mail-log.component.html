@@ -1,0 +1,23 @@
+<h1>Mail Log</h1>
+<p class="hint">Simulated emails sent for booking requests, returns, approvals, reminders, and fines.</p>
+<button class="btn-primary" (click)="runRemindersNow()">Run Reminder Check Now</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>To</th>
+      <th>Type</th>
+      <th>Subject</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of mails">
+      <td>{{ m.sentAt | date:'short' }}</td>
+      <td>{{ m.to }}</td>
+      <td><span class="badge">{{ m.type }}</span></td>
+      <td>{{ m.subject }}</td>
+    </tr>
+  </tbody>
+</table>
+<p *ngIf="!mails.length">No emails sent yet.</p>

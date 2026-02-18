@@ -1,0 +1,21 @@
+<h1>Member Dashboard</h1>
+<div class="stats-grid" *ngIf="member">
+  <div class="stat-card">
+    <span class="stat-value">{{ member.name }}</span>
+    <span class="stat-label">Welcome</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ member.membershipExpiry }}</span>
+    <span class="stat-label">Membership Expires</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">${{ member.fineBalance }}</span>
+    <span class="stat-label">Fine Balance</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ myBorrowed.length }}</span>
+    <span class="stat-label">Books Borrowed</span>
+  </div>
+</div>
+<div *ngIf="overdueCount > 0" class="alert warning">You have {{ overdueCount }} overdue book(s). Please return them to avoid additional fines.</div>
+<div *ngIf="pendingCount > 0" class="alert info">{{ pendingCount }} request(s) pending approval.</div>

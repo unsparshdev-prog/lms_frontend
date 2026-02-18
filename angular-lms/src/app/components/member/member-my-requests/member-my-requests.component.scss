@@ -1,0 +1,6 @@
+h1 { margin-bottom: 1rem; }
+section { margin-bottom: 2rem; }
+h2 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+.table { width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); th, td { padding: 0.75rem 1rem; text-align: left; } th { background: #1a1a2e; color: white; } tr:nth-child(even) { background: #f9f9f9; } tr.overdue { background: #fff3cd; } }
+.badge { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem; &.overdue-badge { background: #f8d7da; color: #721c24; } }
+.btn-sm { padding: 0.25rem 0.5rem; margin-right: 0.25rem; font-size: 0.85rem; border: none; border-radius: 4px; cursor: pointer; &.return { background: #28a745; color: white; } }

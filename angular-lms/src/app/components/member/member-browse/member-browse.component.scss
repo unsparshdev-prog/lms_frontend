@@ -1,0 +1,4 @@
+h1 { margin-bottom: 1rem; }
+.filter { margin-bottom: 1rem; select { padding: 0.5rem; margin-left: 0.5rem; } }
+.book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.book-card { background: white; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); h3 { margin: 0 0 0.5rem; font-size: 1rem; } .author, .category { font-size: 0.9rem; color: #666; margin: 0.25rem 0; } .available { font-size: 0.85rem; margin-bottom: 0.75rem; } .btn-primary { width: 100%; padding: 0.5rem; background: #0f3460; color: white; border: none; border-radius: 6px; cursor: pointer; &:disabled { opacity: 0.5; cursor: not-allowed; } } }

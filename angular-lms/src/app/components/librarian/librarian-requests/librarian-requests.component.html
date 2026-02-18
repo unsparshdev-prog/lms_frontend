@@ -1,0 +1,82 @@
+<h1>Requests Management</h1>
+
+<section>
+  <h2>Borrow Requests (Pending)</h2>
+  <table class="table" *ngIf="borrowRequests.length">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Member</th>
+        <th>Book</th>
+        <th>Requested</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of borrowRequests">
+        <td>{{ r.requestId }}</td>
+        <td>{{ r.memberEmail }}</td>
+        <td>{{ r.bookTitle }}</td>
+        <td>{{ r.requestedAt | date:'short' }}</td>
+        <td>
+          <button class="btn-sm approve" (click)="approveBorrow(r.requestId)">Approve</button>
+          <button class="btn-sm reject" (click)="rejectRequest(r.requestId)">Reject</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!borrowRequests.length">No pending borrow requests.</p>
+</section>
+
+<section>
+  <h2>Return Requests (Pending)</h2>
+  <table class="table" *ngIf="returnRequests.length">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Member</th>
+        <th>Book</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of returnRequests">
+        <td>{{ r.requestId }}</td>
+        <td>{{ r.memberEmail }}</td>
+        <td>{{ r.bookTitle }}</td>
+        <td>
+          <button class="btn-sm approve" (click)="processReturn(r.requestId)">Process Return</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!returnRequests.length">No pending return requests.</p>
+</section>
+
+<section>
+  <h2>Extension Requests</h2>
+  <table class="table" *ngIf="extensionRequests.length">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Member</th>
+        <th>Book</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of extensionRequests">
+        <td>{{ r.requestId }}</td>
+        <td>{{ r.memberEmail }}</td>
+        <td>{{ r.bookTitle }}</td>
+        <td>{{ r.dueDate }}</td>
+        <td>
+          <button class="btn-sm approve" (click)="approveExtension(r.requestId)">Approve</button>
+          <button class="btn-sm reject" (click)="rejectExtension(r.requestId)">Reject</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!extensionRequests.length">No extension requests.</p>
+</section>

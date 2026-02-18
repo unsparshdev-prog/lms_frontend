@@ -1,0 +1,56 @@
+<h1>My Requests</h1>
+
+<section>
+  <h2>Borrowed Books</h2>
+  <table class="table" *ngIf="borrowed.length">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Book</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of borrowed" [class.overdue]="isOverdue(r)">
+        <td>{{ r.requestId }}</td>
+        <td>{{ r.bookTitle }}</td>
+        <td>{{ r.dueDate }}</td>
+        <td>
+          <span *ngIf="r.extensionRequested" class="badge">Extension Requested</span>
+          <span *ngIf="!r.extensionRequested && isOverdue(r)" class="badge overdue-badge">Overdue</span>
+          <span *ngIf="!r.extensionRequested && !isOverdue(r)" class="badge">Approved</span>
+        </td>
+        <td>
+          <button *ngIf="!r.extensionRequested" class="btn-sm" (click)="requestExtension(r)">Request Extension</button>
+          <button class="btn-sm return" (click)="requestReturn(r)">Return</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!borrowed.length">No borrowed books.</p>
+</section>
+
+<section>
+  <h2>All My Requests</h2>
+  <table class="table" *ngIf="requests.length">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Book</th>
+        <th>Status</th>
+        <th>Requested</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of requests">
+        <td>{{ r.requestId }}</td>
+        <td>{{ r.bookTitle }}</td>
+        <td><span class="badge" [class]="r.status">{{ r.status }}</span></td>
+        <td>{{ r.requestedAt | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!requests.length">No requests.</p>
+</section>

@@ -1,0 +1,19 @@
+<h1>Browse Books</h1>
+<div class="filter">
+  <label>Category:</label>
+  <select [(ngModel)]="selectedCategory" (ngModelChange)="filter()">
+    <option value="">All</option>
+    <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+  </select>
+</div>
+
+<div class="book-grid">
+  <div class="book-card" *ngFor="let b of filteredBooks">
+    <h3>{{ b.title }}</h3>
+    <p class="author">{{ b.author }}</p>
+    <p class="category">{{ b.category }}</p>
+    <p class="available">Available: {{ b.availableQuantity }}</p>
+    <button class="btn-primary" (click)="requestBook(b)" [disabled]="b.availableQuantity === 0">Request Book</button>
+  </div>
+</div>
+<p *ngIf="!filteredBooks.length">No books available in this category.</p>
