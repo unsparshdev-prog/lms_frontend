@@ -3,8 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { LibrarianGuard } from './guards/role.guard';
 import { MemberGuard } from './guards/role.guard';
+import { MembershipGuard } from './guards/membership.guard';
 
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { LayoutComponent } from './components/layout/layout.component';
 
 import { LibrarianDashboardComponent } from './components/librarian/librarian-dashboard/librarian-dashboard.component';
@@ -19,9 +21,11 @@ import { MemberBrowseComponent } from './components/member/member-browse/member-
 import { MemberMyRequestsComponent } from './components/member/member-my-requests/member-my-requests.component';
 import { MemberHistoryComponent } from './components/member/member-history/member-history.component';
 import { MemberReportsComponent } from './components/member/member-reports/member-reports.component';
+import { MemberMembershipComponent } from './components/member/member-membership/member-membership.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   {
     path: '',
     canActivate: [AuthGuard],
@@ -37,27 +41,48 @@ const routes: Routes = [
           { path: 'members', component: LibrarianMembersComponent },
           { path: 'requests', component: LibrarianRequestsComponent },
           { path: 'reports', component: LibrarianReportsComponent },
-          { path: 'mail-log', component: LibrarianMailLogComponent }
-        ]
+          { path: 'mail-log', component: LibrarianMailLogComponent },
+        ],
       },
       {
         path: 'member',
         canActivate: [MemberGuard],
         children: [
-          { path: 'dashboard', component: MemberDashboardComponent },
-          { path: 'browse', component: MemberBrowseComponent },
-          { path: 'my-requests', component: MemberMyRequestsComponent },
-          { path: 'history', component: MemberHistoryComponent },
-          { path: 'reports', component: MemberReportsComponent }
-        ]
-      }
-    ]
+          { path: 'membership', component: MemberMembershipComponent },
+          {
+            path: 'dashboard',
+            component: MemberDashboardComponent,
+            canActivate: [MembershipGuard],
+          },
+          {
+            path: 'browse',
+            component: MemberBrowseComponent,
+            canActivate: [MembershipGuard],
+          },
+          {
+            path: 'my-requests',
+            component: MemberMyRequestsComponent,
+            canActivate: [MembershipGuard],
+          },
+          {
+            path: 'history',
+            component: MemberHistoryComponent,
+            canActivate: [MembershipGuard],
+          },
+          {
+            path: 'reports',
+            component: MemberReportsComponent,
+            canActivate: [MembershipGuard],
+          },
+        ],
+      },
+    ],
   },
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

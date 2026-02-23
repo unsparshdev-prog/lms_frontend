@@ -4,7 +4,10 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class LibrarianGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   canActivate(): boolean {
     if (this.auth.isLibrarian()) return true;
@@ -15,7 +18,10 @@ export class LibrarianGuard implements CanActivate {
 
 @Injectable({ providedIn: 'root' })
 export class MemberGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   canActivate(): boolean {
     if (this.auth.isMember()) return true;

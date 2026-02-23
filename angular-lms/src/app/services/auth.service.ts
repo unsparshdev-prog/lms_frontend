@@ -1,50 +1,65 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/user.model';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import {
+  User,
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+} from '../models/user.model';
 
-const USERS_KEY = 'lms_users';
+const API_BASE = 'http://localhost:8080/api/auth';
 const CURRENT_USER_KEY = 'lms_current_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getStoredUser());
+  private currentUserSubject = new BehaviorSubject<User | null>(
+    this.getStoredUser(),
+  );
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private router: Router) {
-    this.seedInitialUsers();
-  }
-
-  private seedInitialUsers(): void {
-    const users = this.getUsers();
-    if (users.length === 0) {
-      const defaultUsers: User[] = [
-        { id: '1', email: 'librarian@lms.com', password: 'librarian123', name: 'Librarian', role: 'librarian' },
-        { id: '2', email: 'member@lms.com', password: 'member123', name: 'John Member', role: 'member', memberId: 'mem-1' }
-      ];
-      localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
-    }
-  }
-
-  private getUsers(): User[] {
-    const data = localStorage.getItem(USERS_KEY);
-    return data ? JSON.parse(data) : [];
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   private getStoredUser(): User | null {
     const data = localStorage.getItem(CURRENT_USER_KEY);
     return data ? JSON.parse(data) : null;
   }
 
-  login(email: string, password: string): { success: boolean; message?: string } {
-    const users = this.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      return { success: true };
-    }
-    return { success: false, message: 'Invalid email or password' };
+  private setUser(res: AuthResponse): void {
+    const user: User = {
+      token: res.token,
+      email: res.email,
+      role: res.role,
+    };
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  updateStoredUser(user: User): void {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  login(email: string, password: string): Observable<AuthResponse> {
+    const body: LoginRequest = { email, password };
+    return this.http
+      .post<AuthResponse>(`${API_BASE}/login`, body)
+      .pipe(tap((res) => this.setUser(res)));
+  }
+
+  register(
+    name: string,
+    email: string,
+    password: string,
+  ): Observable<AuthResponse> {
+    const body: RegisterRequest = { name, email, password, role: 'MEMBER' };
+    return this.http
+      .post<AuthResponse>(`${API_BASE}/register`, body)
+      .pipe(tap((res) => this.setUser(res)));
   }
 
   logout(): void {
@@ -53,19 +68,27 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  getToken(): string | null {
+    return this.currentUserSubject.value?.token ?? null;
+  }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
   isLoggedIn(): boolean {
-    return !!this.getCurrentUser();
+    return !!this.getToken();
   }
 
   isLibrarian(): boolean {
-    return this.getCurrentUser()?.role === 'librarian';
+    return this.getCurrentUser()?.role === 'LIBRARIAN';
   }
 
   isMember(): boolean {
-    return this.getCurrentUser()?.role === 'member';
+    return this.getCurrentUser()?.role === 'MEMBER';
+  }
+
+  isMembershipActive(): boolean {
+    return this.getCurrentUser()?.membershipActive === true;
   }
 }

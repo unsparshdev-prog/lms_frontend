@@ -1,8 +1,16 @@
 <header class="header">
-  <a routerLink="{{ auth.isLibrarian() ? '/librarian/dashboard' : '/member/dashboard' }}" class="logo">LMS</a>
+  <a
+    routerLink="{{
+      auth.isLibrarian() ? '/librarian/dashboard' : '/member/dashboard'
+    }}"
+    class="logo"
+    >LMS</a
+  >
   <nav class="nav">
     <ng-container *ngIf="auth.isLibrarian()">
-      <a routerLink="/librarian/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/librarian/dashboard" routerLinkActive="active"
+        >Dashboard</a
+      >
       <a routerLink="/librarian/books" routerLinkActive="active">Books</a>
       <a routerLink="/librarian/members" routerLinkActive="active">Members</a>
       <a routerLink="/librarian/requests" routerLinkActive="active">Requests</a>
@@ -10,15 +18,51 @@
       <a routerLink="/librarian/mail-log" routerLinkActive="active">Mail Log</a>
     </ng-container>
     <ng-container *ngIf="auth.isMember()">
-      <a routerLink="/member/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/member/browse" routerLinkActive="active">Browse Books</a>
-      <a routerLink="/member/my-requests" routerLinkActive="active">My Requests</a>
-      <a routerLink="/member/history" routerLinkActive="active">History</a>
-      <a routerLink="/member/reports" routerLinkActive="active">Reports</a>
+      <a routerLink="/member/membership" routerLinkActive="active"
+        >Membership</a
+      >
+      <a
+        routerLink="/member/dashboard"
+        routerLinkActive="active"
+        [class.disabled-link]="!membershipActive"
+        (click)="!membershipActive && $event.preventDefault()"
+        >Dashboard</a
+      >
+      <a
+        routerLink="/member/browse"
+        routerLinkActive="active"
+        [class.disabled-link]="!membershipActive"
+        (click)="!membershipActive && $event.preventDefault()"
+        >Browse Books</a
+      >
+      <a
+        routerLink="/member/my-requests"
+        routerLinkActive="active"
+        [class.disabled-link]="!membershipActive"
+        (click)="!membershipActive && $event.preventDefault()"
+        >My Requests</a
+      >
+      <a
+        routerLink="/member/history"
+        routerLinkActive="active"
+        [class.disabled-link]="!membershipActive"
+        (click)="!membershipActive && $event.preventDefault()"
+        >History</a
+      >
+      <a
+        routerLink="/member/reports"
+        routerLinkActive="active"
+        [class.disabled-link]="!membershipActive"
+        (click)="!membershipActive && $event.preventDefault()"
+        >Reports</a
+      >
     </ng-container>
   </nav>
   <div class="user">
-    <span>{{ auth.getCurrentUser()?.name }}</span>
+    <span *ngIf="!membershipActive && auth.isMember()" class="membership-badge"
+      >No Membership</span
+    >
+    <span>{{ auth.getCurrentUser()?.email }}</span>
     <button class="btn-logout" (click)="logout()">Logout</button>
   </div>
 </header>

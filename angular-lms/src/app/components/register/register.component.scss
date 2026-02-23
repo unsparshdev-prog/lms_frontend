@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -7,7 +7,6 @@
   position: relative;
   overflow: hidden;
 
-  // Subtle gradient orbs
   &::before,
   &::after {
     content: '';
@@ -22,25 +21,25 @@
     height: 400px;
     background: var(--accent);
     top: -100px;
-    right: -100px;
+    left: -100px;
   }
   &::after {
     width: 300px;
     height: 300px;
     background: #6c63ff;
     bottom: -80px;
-    left: -80px;
+    right: -80px;
   }
 }
 
-.login-card {
+.register-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   padding: 2.5rem;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.5s ease;
@@ -71,7 +70,7 @@
       color: var(--text-secondary);
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 1px solid var(--border-input);
@@ -90,6 +89,21 @@
         outline: none;
         border-color: var(--border-input-focus);
         box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8da3' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 14px) center;
+      padding-right: 2.5rem;
+
+      option {
+        background: var(--bg-card);
+        color: var(--text-primary);
       }
     }
 
@@ -140,7 +154,7 @@
     }
   }
 
-  .register-link {
+  .login-link {
     margin-top: 1.5rem;
     font-size: 0.875rem;
     color: var(--text-muted);
@@ -149,7 +163,6 @@
     a {
       color: var(--accent);
       font-weight: 600;
-      text-decoration: none;
       transition: color var(--transition-fast);
 
       &:hover {

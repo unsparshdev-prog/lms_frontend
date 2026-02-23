@@ -5,14 +5,14 @@ import { ReminderSchedulerService } from './services/reminder-scheduler.service'
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
-  styles: []
+  template: '<app-toast></app-toast><router-outlet></router-outlet>',
+  styles: [],
 })
 export class AppComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private reminder: ReminderSchedulerService
+    private reminder: ReminderSchedulerService,
   ) {}
 
   ngOnInit(): void {

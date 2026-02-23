@@ -1,0 +1,47 @@
+<div class="membership-page">
+  <!-- Status Banner -->
+  <div class="status-banner" [ngClass]="isActive ? 'active' : 'inactive'">
+    <div class="status-content">
+      <div class="status-icon">{{ isActive ? "✓" : "⚠" }}</div>
+      <div class="status-text">
+        <h3 *ngIf="isActive">Your Membership is Active</h3>
+        <h3 *ngIf="!isActive">No Active Membership</h3>
+        <p *ngIf="isActive">
+          Valid until {{ member?.membershipExpiry }} · {{ getDaysLeft() }} days
+          remaining
+        </p>
+        <p *ngIf="!isActive">
+          Please choose a plan below to activate your library membership and
+          access all features.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plans -->
+  <h2 class="section-title">Choose a Membership Plan</h2>
+  <div class="plans-grid">
+    <div
+      *ngFor="let plan of plans"
+      class="plan-card"
+      [ngClass]="{ popular: plan.popular }"
+    >
+      <div class="popular-badge" *ngIf="plan.popular">Most Popular</div>
+      <h3 class="plan-name">{{ plan.name }}</h3>
+      <div class="plan-price">{{ plan.price }}</div>
+      <div class="plan-duration">{{ plan.duration }}</div>
+      <ul class="plan-features">
+        <li *ngFor="let feature of plan.features">
+          <span class="check-icon">✓</span> {{ feature }}
+        </li>
+      </ul>
+      <button
+        class="btn-activate"
+        [ngClass]="{ 'btn-popular': plan.popular }"
+        (click)="activatePlan(plan)"
+      >
+        {{ isActive ? "Switch Plan" : "Activate" }}
+      </button>
+    </div>
+  </div>
+</div>
