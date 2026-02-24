@@ -1,0 +1,66 @@
+<h1>Members Management</h1>
+<button class="btn-primary" (click)="openForm()">Add Member / Subscription</button>
+
+<div class="modal" *ngIf="showForm">
+  <div class="modal-content">
+    <h3>Add Member</h3>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Name</label>
+        <input formControlName="name" type="text">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input formControlName="email" type="email">
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input formControlName="phone" type="text">
+      </div>
+      <div class="form-group">
+        <label>Membership Expiry</label>
+        <input formControlName="membershipExpiry" type="date">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select formControlName="status">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="closeForm()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid">Add Member</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Expiry</th>
+      <th>Status</th>
+      <th>Fine Balance</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of members">
+      <td>{{ m.name }}</td>
+      <td>{{ m.email }}</td>
+      <td>{{ m.phone }}</td>
+      <td>{{ m.membershipExpiry }}</td>
+      <td><span class="badge" [class]="m.status">{{ m.status }}</span></td>
+      <td>${{ m.fineBalance }}</td>
+      <td>
+        <button *ngIf="m.status === 'pending'" class="btn-sm approve" (click)="approve(m)">Approve</button>
+        <button *ngIf="m.status === 'pending'" class="btn-sm reject" (click)="reject(m)">Reject</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,102 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 1.75rem;
+  height: 60px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--accent);
+    text-decoration: none;
+    margin-right: 2.5rem;
+    letter-spacing: -0.03em;
+  }
+
+  .nav {
+    flex: 1;
+    display: flex;
+    gap: 0.25rem;
+
+    a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+      font-size: 0.9rem;
+      font-weight: 500;
+
+      &:hover {
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      &.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      &.disabled-link {
+        opacity: 0.35;
+        pointer-events: none;
+        cursor: not-allowed;
+        position: relative;
+      }
+    }
+  }
+
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .membership-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+
+    span {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-logout {
+      padding: 0.45rem 1rem;
+      background: transparent;
+      border: 1px solid var(--border-color-hover);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: var(--font);
+      transition: all var(--transition);
+
+      &:hover {
+        background: var(--danger-soft);
+        border-color: var(--danger);
+        color: var(--danger);
+      }
+    }
+  }
+}
+
+.main {
+  padding: 2rem;
+  min-height: calc(100vh - 60px);
+  background: var(--bg-primary);
+}

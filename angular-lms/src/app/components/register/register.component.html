@@ -1,0 +1,60 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Library Management System</h1>
+    <h2>Create Account</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Enter your name"
+        />
+        <span
+          class="error"
+          *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+          >Name is required (min 2 characters)</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email"
+        />
+        <span
+          class="error"
+          *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+          >Valid email required</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter password (min 6 characters)"
+        />
+        <span
+          class="error"
+          *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+          >Password required (min 6 characters)</span
+        >
+      </div>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="form.invalid || loading"
+      >
+        {{ loading ? "Creating account..." : "Register" }}
+      </button>
+    </form>
+    <p class="login-link">
+      Already have an account? <a routerLink="/login">Sign in here</a>
+    </p>
+  </div>
+</div>

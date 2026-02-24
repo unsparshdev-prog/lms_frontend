@@ -1,0 +1,207 @@
+:host {
+  display: block;
+  animation: fadeInUp 0.4s ease;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.btn-primary {
+  margin-bottom: 1.5rem;
+  padding: 0.55rem 1.25rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font);
+  transition: all var(--transition);
+
+  &:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.3s ease;
+
+  h3 {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.15rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-family: var(--font);
+      transition: all var(--transition);
+
+      &:focus {
+        outline: none;
+        border-color: var(--border-input-focus);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      option {
+        background: var(--bg-card);
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.55rem 1.25rem;
+  border: 1px solid var(--border-color-hover);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  transition: all var(--transition);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+  }
+}
+
+.table {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th, td {
+    padding: 0.85rem 1.15rem;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  th {
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  td {
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tbody tr {
+    transition: background var(--transition-fast);
+    &:hover { background: rgba(255, 255, 255, 0.02); }
+    &:last-child td { border-bottom: none; }
+  }
+}
+
+.badge {
+  padding: 0.25rem 0.65rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  &.approved {
+    background: var(--success-soft);
+    color: var(--success);
+  }
+  &.pending {
+    background: var(--warning-soft);
+    color: var(--warning);
+  }
+  &.rejected {
+    background: var(--danger-soft);
+    color: var(--danger);
+  }
+}
+
+.btn-sm {
+  padding: 0.3rem 0.7rem;
+  margin-right: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all var(--transition);
+
+  &.approve {
+    background: var(--success-soft);
+    color: var(--success);
+    &:hover { background: var(--success); color: var(--text-inverse); }
+  }
+  &.reject {
+    background: var(--danger-soft);
+    color: var(--danger);
+    &:hover { background: var(--danger); color: var(--text-inverse); }
+  }
+}

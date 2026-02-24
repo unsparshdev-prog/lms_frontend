@@ -1,0 +1,20 @@
+<h1>Librarian Dashboard</h1>
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.books }}</span>
+    <span class="stat-label">Total Books</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.members }}</span>
+    <span class="stat-label">Active Members</span>
+  </div>
+  <div class="stat-card highlight">
+    <span class="stat-value">{{ stats.pendingRequests }}</span>
+    <span class="stat-label">Pending Requests</span>
+  </div>
+  <div class="stat-card warning">
+    <span class="stat-value">{{ stats.overdue }}</span>
+    <span class="stat-label">Overdue Returns</span>
+  </div>
+</div>
+<p class="welcome">Manage books, members, and requests from the navigation menu.</p>

@@ -1,0 +1,47 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Library Management System</h1>
+    <h2>Sign In</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email"
+        />
+        <span
+          class="error"
+          *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+          >Valid email required</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter password"
+        />
+        <span
+          class="error"
+          *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+          >Password required</span
+        >
+      </div>
+      <p class="error" *ngIf="false"></p>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="form.invalid || loading"
+      >
+        {{ loading ? "Signing in..." : "Login" }}
+      </button>
+    </form>
+    <p class="register-link">
+      Don't have an account? <a routerLink="/register">Register here</a>
+    </p>
+  </div>
+</div>
