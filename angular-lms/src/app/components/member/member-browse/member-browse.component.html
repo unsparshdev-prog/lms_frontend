@@ -1,19 +1,168 @@
-<h1>Browse Books</h1>
-<div class="filter">
-  <label>Category:</label>
-  <select [(ngModel)]="selectedCategory" (ngModelChange)="filter()">
-    <option value="">All</option>
-    <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-  </select>
-</div>
+<div class="browse-page">
+  <div class="page-header">
+    <h1>Available Books</h1>
+    <div class="search-box">
+      <svg
+        class="search-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        placeholder="Search by title, author, ISBN or category..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="filterBooks()"
+      />
+    </div>
+  </div>
 
-<div class="book-grid">
-  <div class="book-card" *ngFor="let b of filteredBooks">
-    <h3>{{ b.title }}</h3>
-    <p class="author">{{ b.author }}</p>
-    <p class="category">{{ b.category }}</p>
-    <p class="available">Available: {{ b.availableQuantity }}</p>
-    <button class="btn-primary" (click)="requestBook(b)" [disabled]="b.availableQuantity === 0">Request Book</button>
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Fetching books...</p>
+  </div>
+
+  <!-- Books Table -->
+  <div class="table-container" *ngIf="!loading && filteredBooks.length > 0">
+    <table class="books-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-title">Title</th>
+          <th class="col-author">Author</th>
+          <th class="col-isbn">ISBN</th>
+          <th class="col-category">Category</th>
+          <th class="col-qty">Available</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of filteredBooks; let i = index">
+          <td class="col-num">{{ i + 1 }}</td>
+          <td class="col-title">
+            <span class="book-title">{{ book.title }}</span>
+          </td>
+          <td class="col-author">{{ book.author }}</td>
+          <td class="col-isbn">
+            <span class="isbn-badge">{{ book.isbn }}</span>
+          </td>
+          <td class="col-category">
+            <span class="category-tag">{{ book.category }}</span>
+          </td>
+          <td class="col-qty">
+            <span
+              class="qty-badge"
+              [ngClass]="book.availableQuantity > 0 ? 'in-stock' : 'out-stock'"
+            >
+              {{ book.availableQuantity }}
+            </span>
+          </td>
+          <td class="col-actions">
+            <div class="action-buttons">
+              <button
+                class="btn-summary"
+                (click)="onSummary(book)"
+                title="AI Summary"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93" />
+                  <path d="M8.24 4.47A4 4 0 0 1 12 2" />
+                  <path d="M12 2v2" />
+                  <path
+                    d="M18.73 9.27A4 4 0 0 1 20 12c0 1.95-1.4 3.58-3.25 3.93"
+                  />
+                  <path d="M15.76 8.47A4 4 0 0 1 20 12" />
+                  <path d="M20 12h-2" />
+                  <path d="M12 22a4 4 0 0 1-4-4c0-1.95 1.4-3.58 3.25-3.93" />
+                  <path d="M15.76 19.53A4 4 0 0 1 12 22" />
+                  <path d="M12 22v-2" />
+                  <path
+                    d="M5.27 14.73A4 4 0 0 1 4 12c0-1.95 1.4-3.58 3.25-3.93"
+                  />
+                  <path d="M8.24 15.53A4 4 0 0 1 4 12" />
+                  <path d="M4 12h2" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
+                <span>Summary</span>
+              </button>
+              <button
+                class="btn-borrow"
+                (click)="onBorrow(book)"
+                [disabled]="book.availableQuantity === 0"
+                title="Borrow this book"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"
+                  />
+                </svg>
+                <span>Borrow</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && filteredBooks.length === 0">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"
+      />
+    </svg>
+    <p>
+      No books found{{ searchTerm ? ' matching "' + searchTerm + '"' : "" }}.
+    </p>
+  </div>
+
+  <!-- Book Count -->
+  <div class="table-footer" *ngIf="!loading && books.length > 0">
+    <span class="book-count">
+      Showing {{ filteredBooks.length }} of {{ books.length }} book{{
+        books.length !== 1 ? "s" : ""
+      }}
+    </span>
   </div>
 </div>
-<p *ngIf="!filteredBooks.length">No books available in this category.</p>

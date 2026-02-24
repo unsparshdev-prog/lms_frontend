@@ -3,127 +3,324 @@
   animation: fadeInUp 0.4s ease;
 }
 
-h1 {
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.browse-page {
+  max-width: 100%;
 }
 
-.filter {
-  margin-bottom: 1.5rem;
+/* ── Header ── */
+.page-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
 
-  label {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
+  h1 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+.search-box {
+  position: relative;
+  flex: 0 1 340px;
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
   }
 
-  select {
-    padding: 0.55rem 2.5rem 0.55rem 0.85rem;
+  input {
+    width: 100%;
+    padding: 0.6rem 0.85rem 0.6rem 2.25rem;
     background: var(--bg-card);
     border: 1px solid var(--border-input);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-family: var(--font);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8da3' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: calc(100% - 12px) center;
     transition: all var(--transition);
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
 
     &:focus {
       outline: none;
       border-color: var(--border-input-focus);
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
+  }
+}
 
-    option {
-      background: var(--bg-card);
-      color: var(--text-primary);
+/* ── Loading ── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Table ── */
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  thead {
+    tr {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background var(--transition);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      color: var(--text-secondary);
+      vertical-align: middle;
     }
   }
 }
 
-p {
+.col-num {
+  width: 48px;
+  color: var(--text-muted) !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.book-title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.isbn-badge {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
 }
 
-.book-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+.category-tag {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 100px;
+  white-space: nowrap;
 }
 
-.book-card {
-  background: var(--bg-card);
+.qty-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0.15rem 0.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+
+  &.in-stock {
+    color: var(--success);
+    background: rgba(52, 211, 153, 0.1);
+  }
+
+  &.out-stock {
+    color: var(--danger);
+    background: rgba(248, 113, 113, 0.1);
+  }
+}
+
+/* ── Action Buttons ── */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-summary,
+.btn-borrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font);
   border: 1px solid var(--border-color);
-  padding: 1.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
   transition: all var(--transition);
+  white-space: nowrap;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.btn-summary {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
 
   &:hover {
-    border-color: var(--border-color-hover);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(59, 130, 246, 0.08));
+    border-color: rgba(168, 85, 247, 0.3);
+    color: #a855f7;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.08);
+
+    svg {
+      color: #a855f7;
+    }
+  }
+}
+
+.btn-borrow {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+
+  &:hover:not(:disabled) {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
   }
 
-  h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
+}
 
-  .author {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin: 0.2rem 0;
-  }
+/* ── Empty State ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
 
-  .category {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin: 0.2rem 0;
-  }
-
-  .available {
-    font-size: 0.85rem;
-    color: var(--success);
+  svg {
     margin-bottom: 1rem;
-    font-weight: 500;
+    opacity: 0.3;
   }
 
-  .btn-primary {
-    width: 100%;
-    padding: 0.6rem;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    font-family: var(--font);
-    transition: all var(--transition);
+  p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
 
-    &:hover:not(:disabled) {
-      background: var(--accent-hover);
-      box-shadow: var(--shadow-glow);
-    }
+/* ── Footer ── */
+.table-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.85rem;
+  padding-right: 0.25rem;
+}
 
-    &:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
+.book-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    flex: 1;
+  }
+
+  .books-table {
+    font-size: 0.8rem;
+  }
+
+  .col-isbn {
+    display: none;
+  }
+
+  .btn-summary span,
+  .btn-borrow span {
+    display: none;
+  }
+
+  .btn-summary,
+  .btn-borrow {
+    padding: 0.4rem;
   }
 }

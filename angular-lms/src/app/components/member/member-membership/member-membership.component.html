@@ -38,9 +38,16 @@
       <button
         class="btn-activate"
         [ngClass]="{ 'btn-popular': plan.popular }"
+        [disabled]="activatingPlanId !== null"
         (click)="activatePlan(plan)"
       >
-        {{ isActive ? "Switch Plan" : "Activate" }}
+        {{
+          activatingPlanId === plan.id
+            ? "Activating..."
+            : isActive
+              ? "Switch Plan"
+              : "Activate"
+        }}
       </button>
     </div>
   </div>

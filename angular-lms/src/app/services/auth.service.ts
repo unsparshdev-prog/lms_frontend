@@ -9,7 +9,7 @@ import {
   RegisterRequest,
 } from '../models/user.model';
 
-const API_BASE = 'http://localhost:8080/api/auth';
+const API_BASE = 'http://localhost:8082/api/auth';
 const CURRENT_USER_KEY = 'lms_current_user';
 
 @Injectable({ providedIn: 'root' })
@@ -31,6 +31,7 @@ export class AuthService {
 
   private setUser(res: AuthResponse): void {
     const user: User = {
+      id: res.id,
       token: res.token,
       email: res.email,
       role: res.role,
