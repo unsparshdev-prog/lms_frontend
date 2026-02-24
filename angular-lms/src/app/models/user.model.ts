@@ -1,6 +1,7 @@
 export type UserRole = 'LIBRARIAN' | 'MEMBER';
 
 export interface User {
+  id: string;
   token: string;
   email: string;
   role: UserRole;
@@ -22,6 +23,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
+  id: string;
   token: string;
   email: string;
   role: UserRole;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { MemberService } from '../../../services/member.service';
+import { MembershipApiService } from '../../../services/membership.service';
 import { ToastService } from '../../../services/toast.service';
 import { Member } from '../../../models/member.model';
 
@@ -23,6 +24,7 @@ interface MembershipPlan {
 export class MemberMembershipComponent implements OnInit {
   member: Member | undefined;
   isActive = false;
+  activatingPlanId: string | null = null;
 
   plans: MembershipPlan[] = [
     {
@@ -73,6 +75,7 @@ export class MemberMembershipComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private memberService: MemberService,
+    private membershipApi: MembershipApiService,
     private toast: ToastService,
     private router: Router,
   ) {}
@@ -97,37 +100,42 @@ export class MemberMembershipComponent implements OnInit {
   }
 
   activatePlan(plan: MembershipPlan): void {
-    if (!this.member) {
-      this.toast.danger('Member profile not found. Please contact support.');
+    const user = this.auth.getCurrentUser();
+    if (!user) {
+      this.toast.danger('User not found. Please log in again.');
       return;
     }
 
-    const expiry = new Date();
-    expiry.setMonth(expiry.getMonth() + plan.months);
-    const expiryStr = expiry.toISOString().split('T')[0];
+    this.activatingPlanId = plan.id;
 
-    this.memberService.updateMember(this.member.id, {
-      membershipExpiry: expiryStr,
-      status: 'approved',
+    this.membershipApi.applyMembership(user.id, plan.id).subscribe({
+      next: (res) => {
+        this.activatingPlanId = null;
+
+        // Update the stored user to include membership info
+        user.membershipActive = true;
+        this.auth.updateStoredUser(user);
+
+        this.toast.success(
+          res.message || `${plan.name} plan activated successfully!`,
+        );
+
+        this.loadMember();
+
+        // Navigate to dashboard after a short delay
+        setTimeout(() => {
+          this.router.navigate(['/member/dashboard']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.activatingPlanId = null;
+        const message =
+          err.error?.message ||
+          err.error?.error ||
+          'Failed to activate membership. Please try again.';
+        this.toast.danger(message);
+      },
     });
-
-    // Update the stored user to include membership info
-    const user = this.auth.getCurrentUser();
-    if (user) {
-      user.membershipActive = true;
-      this.auth.updateStoredUser(user);
-    }
-
-    this.toast.success(
-      `${plan.name} plan activated! Your membership is valid until ${expiryStr}.`,
-    );
-
-    this.loadMember();
-
-    // Navigate to dashboard after a short delay
-    setTimeout(() => {
-      this.router.navigate(['/member/dashboard']);
-    }, 1500);
   }
 
   getDaysLeft(): number {
