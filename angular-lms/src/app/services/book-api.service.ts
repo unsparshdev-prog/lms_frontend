@@ -5,15 +5,25 @@ import { Observable } from 'rxjs';
 const API_BASE = 'http://localhost:8082/api';
 
 export interface ApiBook {
-  id: string;
-  title: string;
-  author: string;
-  isbn: string;
+  bookId: number;
+  bookName: string;
+  authorName: string;
+  publisherName: string;
   category: string;
-  quantity: number;
+  available: boolean | null;
+  totalQuantity: number;
+  availableQuantity: number | null;
+  [key: string]: any;
+}
+
+export interface AddBookRequest {
+  bookName: string;
+  authorName: string;
+  publisherName: string;
+  category: string;
+  available: boolean;
+  totalQuantity: number;
   availableQuantity: number;
-  createdAt: string;
-  [key: string]: any; // allow extra fields from the backend
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,5 +32,9 @@ export class BookApiService {
 
   getAllBooks(): Observable<ApiBook[]> {
     return this.http.get<ApiBook[]>(`${API_BASE}/books`);
+  }
+
+  addBook(book: AddBookRequest): Observable<ApiBook> {
+    return this.http.post<ApiBook>(`${API_BASE}/books`, book);
   }
 }

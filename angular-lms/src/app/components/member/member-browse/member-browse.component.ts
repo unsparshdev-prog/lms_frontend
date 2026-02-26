@@ -49,20 +49,20 @@ export class MemberBrowseComponent implements OnInit {
     }
     this.filteredBooks = this.books.filter(
       (b) =>
-        b.title.toLowerCase().includes(term) ||
-        b.author.toLowerCase().includes(term) ||
-        b.isbn.toLowerCase().includes(term) ||
+        b.bookName.toLowerCase().includes(term) ||
+        b.authorName.toLowerCase().includes(term) ||
+        (b.publisherName && b.publisherName.toLowerCase().includes(term)) ||
         b.category.toLowerCase().includes(term),
     );
   }
 
   onSummary(book: ApiBook): void {
-    this.toast.success(`AI Summary requested for "${book.title}"`);
+    this.toast.success(`AI Summary requested for "${book.bookName}"`);
     // TODO: Integrate with AI summary API
   }
 
   onBorrow(book: ApiBook): void {
-    this.toast.success(`Borrow request sent for "${book.title}"`);
+    this.toast.success(`Borrow request sent for "${book.bookName}"`);
     // TODO: Integrate with borrow API
   }
 }
