@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { MemberService } from '../../../services/member.service';
 import { MembershipApiService } from '../../../services/membership.service';
 import { ToastService } from '../../../services/toast.service';
-import { Member } from '../../../models/member.model';
 
 interface MembershipPlan {
   id: string;
@@ -22,15 +20,17 @@ interface MembershipPlan {
   styleUrls: ['./member-membership.component.scss'],
 })
 export class MemberMembershipComponent implements OnInit {
-  member: Member | undefined;
   isActive = false;
   activatingPlanId: string | null = null;
 
+  /** After applying, show approval pending screen */
+  approvalPending = false;
+
   plans: MembershipPlan[] = [
     {
-      id: 'basic',
+      id: 'ONE_MONTH',
       name: 'Basic',
-      duration: '3 Months',
+      duration: '1 Months',
       months: 3,
       price: '₹499',
       features: [
@@ -41,7 +41,7 @@ export class MemberMembershipComponent implements OnInit {
       popular: false,
     },
     {
-      id: 'standard',
+      id: 'SIX_MONTH',
       name: 'Standard',
       duration: '6 Months',
       months: 6,
@@ -55,7 +55,7 @@ export class MemberMembershipComponent implements OnInit {
       popular: true,
     },
     {
-      id: 'premium',
+      id: 'ONE_YEAR',
       name: 'Premium',
       duration: '12 Months',
       months: 12,
@@ -74,29 +74,41 @@ export class MemberMembershipComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private memberService: MemberService,
     private membershipApi: MembershipApiService,
     private toast: ToastService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.loadMember();
+    this.checkCurrentStatus();
   }
 
-  private loadMember(): void {
-    const user = this.auth.getCurrentUser();
-    if (user) {
-      this.member = this.memberService.getMemberByEmail(user.email);
-      this.isActive = this.checkMembershipActive();
+  /**
+   * Check current membership status from the backend on load.
+   */
+  private checkCurrentStatus(): void {
+    const userId = this.auth.getUserId();
+    if (!userId) {
+      this.isActive = false;
+      return;
     }
-  }
 
-  private checkMembershipActive(): boolean {
-    if (!this.member) return false;
-    if (this.member.status !== 'approved') return false;
-    const expiry = new Date(this.member.membershipExpiry);
-    return expiry > new Date();
+    this.membershipApi.getMembershipStatus(userId).subscribe({
+      next: (statusText) => {
+        const status = statusText?.trim().toUpperCase();
+        if (status === 'ACTIVE') {
+          this.isActive = true;
+        } else if (status === 'PENDING') {
+          this.approvalPending = true;
+          this.isActive = false;
+        } else {
+          this.isActive = false;
+        }
+      },
+      error: () => {
+        this.isActive = false;
+      },
+    });
   }
 
   activatePlan(plan: MembershipPlan): void {
@@ -106,43 +118,43 @@ export class MemberMembershipComponent implements OnInit {
       return;
     }
 
+    const userId = user.userId;
+    if (!userId) {
+      this.toast.danger('User ID not found. Please log out and log in again.');
+      return;
+    }
+
     this.activatingPlanId = plan.id;
 
-    this.membershipApi.applyMembership(user.id, plan.id).subscribe({
+    this.membershipApi.applyMembership(userId, plan.id).subscribe({
       next: (res) => {
         this.activatingPlanId = null;
-
-        // Update the stored user to include membership info
-        user.membershipActive = true;
-        this.auth.updateStoredUser(user);
-
         this.toast.success(
-          res.message || `${plan.name} plan activated successfully!`,
+          res.message ||
+            `${plan.name} plan application submitted! Your membership is under review.`,
         );
 
-        this.loadMember();
+        // Show the pending approval screen
+        this.approvalPending = true;
 
-        // Navigate to dashboard after a short delay
-        setTimeout(() => {
-          this.router.navigate(['/member/dashboard']);
-        }, 1500);
+        // Update stored user
+        user.membershipActive = false;
+        user.membershipStatus = 'PENDING';
+        this.auth.updateStoredUser(user);
       },
       error: (err) => {
         this.activatingPlanId = null;
         const message =
           err.error?.message ||
           err.error?.error ||
-          'Failed to activate membership. Please try again.';
+          'Failed to submit membership application. Please try again.';
         this.toast.danger(message);
       },
     });
   }
 
-  getDaysLeft(): number {
-    if (!this.member) return 0;
-    const expiry = new Date(this.member.membershipExpiry);
-    const now = new Date();
-    const diff = expiry.getTime() - now.getTime();
-    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  /** Log out and go back to login so user can log in once approved */
+  goToLogin(): void {
+    this.auth.logout();
   }
 }

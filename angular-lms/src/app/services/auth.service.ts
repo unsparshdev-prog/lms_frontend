@@ -32,6 +32,7 @@ export class AuthService {
   private setUser(res: AuthResponse): void {
     const user: User = {
       id: res.id,
+      userId: res.userId || res.id,
       token: res.token,
       email: res.email,
       role: res.role,
@@ -75,6 +76,10 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  getUserId(): string | null {
+    return this.currentUserSubject.value?.userId ?? null;
   }
 
   isLoggedIn(): boolean {

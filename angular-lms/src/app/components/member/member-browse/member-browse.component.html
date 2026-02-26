@@ -38,9 +38,9 @@
       <thead>
         <tr>
           <th class="col-num">#</th>
-          <th class="col-title">Title</th>
+          <th class="col-title">Book Name</th>
           <th class="col-author">Author</th>
-          <th class="col-isbn">ISBN</th>
+          <th class="col-isbn">Publisher</th>
           <th class="col-category">Category</th>
           <th class="col-qty">Available</th>
           <th class="col-actions">Actions</th>
@@ -50,11 +50,11 @@
         <tr *ngFor="let book of filteredBooks; let i = index">
           <td class="col-num">{{ i + 1 }}</td>
           <td class="col-title">
-            <span class="book-title">{{ book.title }}</span>
+            <span class="book-title">{{ book.bookName }}</span>
           </td>
-          <td class="col-author">{{ book.author }}</td>
+          <td class="col-author">{{ book.authorName }}</td>
           <td class="col-isbn">
-            <span class="isbn-badge">{{ book.isbn }}</span>
+            <span class="isbn-badge">{{ book.publisherName }}</span>
           </td>
           <td class="col-category">
             <span class="category-tag">{{ book.category }}</span>
@@ -62,9 +62,11 @@
           <td class="col-qty">
             <span
               class="qty-badge"
-              [ngClass]="book.availableQuantity > 0 ? 'in-stock' : 'out-stock'"
+              [ngClass]="
+                (book.availableQuantity ?? 0) > 0 ? 'in-stock' : 'out-stock'
+              "
             >
-              {{ book.availableQuantity }}
+              {{ book.availableQuantity ?? "—" }}
             </span>
           </td>
           <td class="col-actions">
@@ -108,7 +110,9 @@
               <button
                 class="btn-borrow"
                 (click)="onBorrow(book)"
-                [disabled]="book.availableQuantity === 0"
+                [disabled]="
+                  !book.availableQuantity || book.availableQuantity === 0
+                "
                 title="Borrow this book"
               >
                 <svg
